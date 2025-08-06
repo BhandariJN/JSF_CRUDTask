@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Student CRUD</title>
+</h:head>
+<h:body>
+<h:form id="form">
+    <h2>Student Registration</h2>
+
+    <h:panelGrid columns="2" cellpadding="5">
+        <h:outputLabel value="Name:"/>
+        <p:inputText value="#{studentBean.student.name}" />
+
+        <h:outputLabel value="Address:"/>
+        <p:inputText value="#{studentBean.student.address}" />
+
+        <h:outputLabel value="Class:"/>
+        <p:selectOneMenu value="#{studentBean.student.studentClass}" 
+                         valueChangeListener="#{studentBean.onClassChange}" 
+                         onchange="submit()">
+            <f:selectItem itemLabel="Science" itemValue="Science" />
+            <f:selectItem itemLabel="Commerce" itemValue="Commerce" />
+            <f:selectItem itemLabel="Arts" itemValue="Arts" />
+        </p:selectOneMenu>
+
+        <h:outputLabel value="Subject:"/>
+        <p:selectOneMenu value="#{studentBean.student.subject}">
+            <f:selectItems value="#{studentBean.subjectList}" />
+        </p:selectOneMenu>
+
+        <h:outputLabel />
+        <p:commandButton value="Save" action="#{studentBean.saveStudent}" update="@form"/>
+    </h:panelGrid>
+
+    <br/>
+    <h2>Student List</h2>
+
+    <p:dataTable value="#{studentBean.studentList}" var="stu" editable="true">
+        <p:column headerText="Name">#{stu.name}</p:column>
+        <p:column headerText="Address">#{stu.address}</p:column>
+        <p:column headerText="Class">#{stu.studentClass}</p:column>
+        <p:column headerText="Subject">#{stu.subject}</p:column>
+        <p:column headerText="Action">
+            <p:commandButton value="Edit" icon="pi pi-pencil" oncomplete="PF('editDialog').show()"
+                             actionListener="#{studentBean.editStudent(stu)}" update=":editForm"/>
+            <p:commandButton value="Delete" icon="pi pi-trash"
+                             action="#{studentBean.deleteStudent(stu)}" update="@form"/>
+        </p:column>
+    </p:dataTable>
+</h:form>
+
+<p:dialog header="Edit Student" widgetVar="editDialog" modal="true" id="editDialog" resizable="false">
+    <h:form id="editForm">
+        <h:panelGrid columns="2" cellpadding="5">
+            <h:outputLabel value="Name:"/>
+            <p:inputText value="#{studentBean.selectedStudent.name}" />
+
+            <h:outputLabel value="Address:"/>
+            <p:inputText value="#{studentBean.selectedStudent.address}" />
+
+            <h:outputLabel value="Class:"/>
+            <p:inputText value="#{studentBean.selectedStudent.studentClass}" />
+
+            <h:outputLabel value="Subject:"/>
+            <p:inputText value="#{studentBean.selectedStudent.subject}" />
+        </h:panelGrid>
+
+        <p:commandButton value="Update" action="#{studentBean.updateStudent}" update=":editForm :form" 
+                         oncomplete="PF('editDialog').hide()" />
+    </h:form>
+</p:dialog>
+</h:body>
+</html>
